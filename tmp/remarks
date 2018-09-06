@@ -1,0 +1,12 @@
+--------------------------------------------------------------------------------
+when building sources, special flags are used :
+  -mtune=native
+  -march=native
+
+they produce binaries that run on the machine they have been built ONLY
+
+It could be wise to allow image user creator/maintainer to specify which value
+to use with these flags :
+  - native == no portability to other archs,
+  - generic == augmented portability
+--------------------------------------------------------------------------------
