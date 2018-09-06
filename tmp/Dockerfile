@@ -13,3 +13,5 @@ run apk add \
       coreutils \
       ninja \
       cmake
+
+copy build-gcc-8.2.0.sh /tmp/

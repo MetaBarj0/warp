@@ -9,6 +9,8 @@ wget https://www.musl-libc.org/releases/musl-1.1.20.tar.gz
 
 TARGET=amd64-linux-musl
 
+mkdir -p /tmp/$TARGET
+
 cd -
 cd /tmp/$TARGET
 
