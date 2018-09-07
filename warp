@@ -27,20 +27,64 @@ set +e
 
 function read_configuration_file() {
   . "$WARP_DIRECTORY/warp.config"
+  eval "$GLOBAL_CONFIG"
 }
 
 function parse_arguments() {
   :
 }
 
+show_bootstrap_banner() {
+  printf $'\033[33;5m%s\n%s\n%s\n\n\033[0m' \
+    '/!\ /!\ /!\ /!\ /!\' \
+    'WARP BOOTSTRAP MODE' \
+    '/!\ /!\ /!\ /!\ /!\'
+
+  printf $'\033[33m%s%s\n\n%s\n  `%s`\n  `%s`\n\n%s%s%s\n%s%s\033[0m' \
+    'warp is currently running in bootstrap mode. It means that you only have' \
+    ' access to a limited set of commands for now.' \
+    'Commands you can execute are:' \
+    'warp bootstrap run' \
+    'warp bootstrap clean' \
+    'You can also specify a container application provider option by using ' \
+    'the `--container-provider=...` option if the defaulted one specified ' \
+    'in the configuration file is not suitable.' \
+    'Keep in mind that in this latter case, you may have to write your own ' \
+    'bootstrap provider plugin in the right directory'
+}
+
+function execute_command_in_bootstrap_mode() {
+  show_bootstrap_banner \
+    && parse_arguments "$@"
+}
+
+function execute_command_in_normal_mode() {
+  parse_arguments "$@"
+}
+
+function is_bootstrap_done() {
+  return 1
+}
+
 function execute_command() {
-  :
+  if ! is_bootstrap_done; then
+    execute_command_in_bootstrap_mode "$@"
+  else
+    execute_command_in_normal_mode "$@"
+  fi
+}
+
+function set_bootstrap_status() {
+  WARP_BOOTSTRAP_DONE=1
+
+  if is_bootstrap_done; then
+    WARP_BOOTSTRAP_DONE=0
+  fi
 }
 
 function run() {
   read_configuration_file \
-  &&  parse_arguments "$@" \
-  &&  execute_command
+    && execute_command "$@"
 }
 
 run "$@"
