@@ -1,0 +1,3 @@
+#!/bin/sh
+echo in warp-shell
+echo args are "$@"

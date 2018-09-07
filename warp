@@ -90,8 +90,58 @@ function get_default_container_provider_if_needed() {
   source_config_file
 }
 
-function run_warp_shell_in_container() {
+function check_container_provider_directory() {
+  local container_provider_directory=\
+"$WARP_DIRECTORY/warp-shell/$CONTAINER_PROVIDER"
+
+  if [ ! -d "$container_provider_directory" ]; then
+    printf $'%s %s %s %s\n' \
+      'Unabled to use the' \
+      "$CONTAINER_PROVIDER" \
+      'provider. There is not any directory with the provider name in' \
+      "$WARP_DIRECTORY/warp-shell"' directory.'
+
+    return 1
+  fi
+}
+
+function check_container_provider_plugin() {
+  local container_provider_functions=\
+"$WARP_DIRECTORY/warp-shell/$CONTAINER_PROVIDER/provider.functions"
+
+  if [ ! -f "$container_provider_functions" ]; then
+    printf $'%s %s %s %s %s %s\n' \
+      'unabled to locate the' \
+      "$container_provider_functions" \
+      'file. This file is necessary and exposes the needed interface to deal' \
+      'with the' "$CONTAINER_PROVIDER" 'provider that has been specified'
+
+    return 1
+  fi
+}
+
+function verify_container_provider_interface() {
   :
+}
+
+function import_container_provider_functions() {
+  check_container_provider_directory \
+    && check_container_provider_plugin \
+    && . "$WARP_DIRECTORY/warp-shell/$CONTAINER_PROVIDER/provider.functions" \
+    && verify_container_provider_interface
+}
+
+function create_warp_shell_container() {
+  import_container_provider_functions
+}
+
+function execute_warp_shell_in_container() {
+  :
+}
+
+function run_warp_shell_in_container() {
+  create_warp_shell_container \
+    && execute_warp_shell_in_container "$@"
 }
 
 function run() {
