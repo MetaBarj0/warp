@@ -7,89 +7,81 @@ function set_warp_directory() {
   WARP_DIRECTORY="$(dirname "$real_warp_path")"
 }
 
-function verify_config_file_existence() {
-  local config_file_name=warp.config
-
-  if [ ! -f $config_file_name ]; then
-    printf $'fatal : cannot find configuration file warp.config in %s\n' \
-      "$WARP_DIRECTORY" >&2
-  fi
+function declare_container_provider() {
+  CONTAINER_PROVIDER=
 }
 
 warmup() {
   set_warp_directory
-  verify_config_file_existence
+  declare_container_provider
 }
 
 warmup
 
 set +e
 
-function read_configuration_file() {
-  . "$WARP_DIRECTORY/warp.config"
-  eval "$GLOBAL_CONFIG"
+function is_key_equals_value_argument() {
+  printf -- "$1" | grep -Eq '^[^=]+=.+$'
+}
+
+function try_setup_container_provider() {
+  if [ "$1" = '--container-provider' ]; then
+    CONTAINER_PROVIDER="$2"
+  fi
+}
+
+function key_of() {
+  echo "$1" | sed -E 's/^([^=]+)=.+$/\1/'
+}
+
+function value_of() {
+  echo "$1" | sed -E 's/^[^=]+=(.+)$/\1/'
 }
 
 function parse_arguments() {
-  [ $# -ge 2 ] && [ $# -le 3 ] \
-    || (return_code=$? \
-          && printf $'%s\n%s' \
-          'Invalid number of argument provided.' \
-          'You can only specify between 2 and 3 arguments.' \
-          && return $return_code)
+  local arg1=
+  local arg2=
+
+  local arg=
+  for arg in $@; do
+    if is_key_equals_value_argument "$arg" && [ -z "$arg1" ]; then
+      try_setup_container_provider "$(key_of "$arg")" "$(value_of "$arg")"
+    else
+      [ -z "$arg1" ] && arg1="$arg" && continue
+      arg2="$arg"
+      try_setup_container_provider "$arg1" "$arg2"
+      arg1=
+      arg2=
+    fi
+  done
 }
 
-show_bootstrap_banner() {
-  printf $'\033[33;5m%s\n%s\n%s\n\n\033[0m' \
-    '/!\ /!\ /!\ /!\ /!\' \
-    'WARP BOOTSTRAP MODE' \
-    '/!\ /!\ /!\ /!\ /!\'
+function parse_arguments_if_any() {
+  if [ $# -eq 0 ]; then
+    return 0
+  fi
 
-  printf $'\033[33m%s%s\n\n%s\n  `%s`\n  `%s`\n\n%s%s%s\n%s%s\033[0m\n' \
-    'warp is currently running in bootstrap mode. It means that you only have' \
-    ' access to a limited set of commands for now.' \
-    'Commands you can execute are:' \
-    'warp bootstrap run' \
-    'warp bootstrap clean' \
-    'You can also specify a container application provider option by using ' \
-    'the `--container-provider=...` option if the defaulted one specified ' \
-    'in the configuration file is not suitable for your environment.' \
-    'Keep in mind that in this latter case, you may have to write your own ' \
-    'bootstrap provider plugin in the right directory'
-}
-
-function execute_command_in_bootstrap_mode() {
-  show_bootstrap_banner \
-    && parse_bootstrap_mode_arguments "$@"
-}
-
-function execute_command_in_normal_mode() {
   parse_arguments "$@"
 }
 
-function is_bootstrap_done() {
-  return 1
+function get_default_container_provider_if_needed() {
+  if [ ! -z "$CONTAINER_PROVIDER" ]; then
+    return 0
+  fi
+
+  . "$WARP_DIRECTORY/warp.config" \
+    && eval "$GLOBAL_CONFIG" \
+    && CONTAINER_PROVIDER="$DEFAULT_CONTAINER_PROVIDER"
 }
 
-function execute_command() {
-  if ! is_bootstrap_done; then
-    execute_command_in_bootstrap_mode "$@"
-  else
-    execute_command_in_normal_mode "$@"
-  fi
-}
-
-function set_bootstrap_status() {
-  WARP_BOOTSTRAP_DONE=1
-
-  if is_bootstrap_done; then
-    WARP_BOOTSTRAP_DONE=0
-  fi
+function run_warp_shell_in_container() {
+  :
 }
 
 function run() {
-  read_configuration_file \
-    && execute_command "$@"
+  parse_arguments_if_any "$@" \
+    && get_default_container_provider_if_needed \
+    && run_warp_shell_in_container "$@"
 }
 
 run "$@"
