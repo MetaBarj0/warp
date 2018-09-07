@@ -2,8 +2,23 @@
 
 set -e
 
+function set_warp_directory() {
+  local real_warp_path="$(realpath "$0")"
+  WARP_DIRECTORY="$(dirname "$real_warp_path")"
+}
+
+function verify_config_file_existence() {
+  local config_file_name=warp.config
+
+  if [ ! -f $config_file_name ]; then
+    printf $'fatal : cannot find configuration file warp.config in %s\n' \
+      "$WARP_DIRECTORY" >&2
+  fi
+}
+
 warmup() {
-  :
+  set_warp_directory
+  verify_config_file_existence
 }
 
 warmup
@@ -11,7 +26,7 @@ warmup
 set +e
 
 function read_configuration_file() {
-  :
+  . "$WARP_DIRECTORY/warp.config"
 }
 
 function parse_arguments() {
@@ -23,9 +38,9 @@ function execute_command() {
 }
 
 function run() {
-  read_configuration_file
-  parse_arguments "$@"
-  execute_command
+  read_configuration_file \
+  &&  parse_arguments "$@" \
+  &&  execute_command
 }
 
 run "$@"
