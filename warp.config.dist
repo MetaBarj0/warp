@@ -1,0 +1,6 @@
+global_config="
+
+default_container_provider=docker
+default_appliance_provider=docker-compose
+
+"

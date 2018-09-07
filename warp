@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -e
+
+warmup() {
+  :
+}
+
+warmup
+
+set +e
+
+function read_configuration_file() {
+  :
+}
+
+function parse_arguments() {
+  :
+}
+
+function execute_command() {
+  :
+}
+
+function run() {
+  read_configuration_file
+  parse_arguments "$@"
+  execute_command
+}
+
+run "$@"
