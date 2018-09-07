@@ -154,4 +154,7 @@ CC=amd64-linux-musl-gcc \
 make -j$(getThreadCount)
 make install
 
+cd -
+cd /warp/gcc-8.2.0/bin
+
 for f in *; do ln -s $f $(echo $f | sed 's/amd64-linux-musl-//'); done
