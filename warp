@@ -64,14 +64,30 @@ function parse_arguments_if_any() {
   parse_arguments "$@"
 }
 
-function get_default_container_provider_if_needed() {
-  if [ ! -z "$CONTAINER_PROVIDER" ]; then
-    return 0
+function source_config_file() {
+  if [ ! -f "$WARP_DIRECTORY/warp.config" ]; then
+    printf $'%s %s\n%s %s\n%s %s\n' \
+      'Unable to find configuration file needed to set the default container' \
+      'provider.' \
+      'Missing file is' \
+      "$WARP_DIRECTORY/warp.config" \
+      'Alternatively, you can specify --container-provider=... on warp' \
+      'invocation.'
+
+    return 1
   fi
 
   . "$WARP_DIRECTORY/warp.config" \
     && eval "$GLOBAL_CONFIG" \
     && CONTAINER_PROVIDER="$DEFAULT_CONTAINER_PROVIDER"
+}
+
+function get_default_container_provider_if_needed() {
+  if [ ! -z "$CONTAINER_PROVIDER" ]; then
+    return 0
+  fi
+
+  source_config_file
 }
 
 function run_warp_shell_in_container() {
