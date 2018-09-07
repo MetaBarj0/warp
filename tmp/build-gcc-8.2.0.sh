@@ -127,6 +127,11 @@ make -j$(getThreadCount)
 make install
 
 cd -
+cd /warp/binutils-2.31.1/bin
+
+for f in *; do ln -s $f $(echo $f | sed 's/amd64-linux-musl-//'); done
+
+cd -
 cd /tmp/$TARGET/build-gcc-8.2.0
 
 find . -maxdepth 1 ! -name . ! -name .. -exec rm -rf {} \;
@@ -148,3 +153,5 @@ CC=amd64-linux-musl-gcc \
 
 make -j$(getThreadCount)
 make install
+
+for f in *; do ln -s $f $(echo $f | sed 's/amd64-linux-musl-//'); done
