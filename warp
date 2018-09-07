@@ -31,7 +31,12 @@ function read_configuration_file() {
 }
 
 function parse_arguments() {
-  :
+  [ $# -ge 2 ] && [ $# -le 3 ] \
+    || (return_code=$? \
+          && printf $'%s\n%s' \
+          'Invalid number of argument provided.' \
+          'You can only specify between 2 and 3 arguments.' \
+          && return $return_code)
 }
 
 show_bootstrap_banner() {
@@ -40,7 +45,7 @@ show_bootstrap_banner() {
     'WARP BOOTSTRAP MODE' \
     '/!\ /!\ /!\ /!\ /!\'
 
-  printf $'\033[33m%s%s\n\n%s\n  `%s`\n  `%s`\n\n%s%s%s\n%s%s\033[0m' \
+  printf $'\033[33m%s%s\n\n%s\n  `%s`\n  `%s`\n\n%s%s%s\n%s%s\033[0m\n' \
     'warp is currently running in bootstrap mode. It means that you only have' \
     ' access to a limited set of commands for now.' \
     'Commands you can execute are:' \
@@ -48,14 +53,14 @@ show_bootstrap_banner() {
     'warp bootstrap clean' \
     'You can also specify a container application provider option by using ' \
     'the `--container-provider=...` option if the defaulted one specified ' \
-    'in the configuration file is not suitable.' \
+    'in the configuration file is not suitable for your environment.' \
     'Keep in mind that in this latter case, you may have to write your own ' \
     'bootstrap provider plugin in the right directory'
 }
 
 function execute_command_in_bootstrap_mode() {
   show_bootstrap_banner \
-    && parse_arguments "$@"
+    && parse_bootstrap_mode_arguments "$@"
 }
 
 function execute_command_in_normal_mode() {
