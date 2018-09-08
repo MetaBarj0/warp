@@ -1,3 +1,14 @@
 #!/bin/sh
 echo in warp-shell
 echo args are "$@"
+
+# function import_container_provider_functions() {
+#   check_container_provider_directory \
+#     && check_container_provider_plugin \
+#     && . "$WARP_DIRECTORY/warp-shell/$CONTAINER_PROVIDER/provider.functions" \
+#     && verify_container_provider_interface
+# }
+
+# function verify_container_provider_interface() {
+#   :
+# }

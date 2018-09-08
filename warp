@@ -38,7 +38,7 @@ function value_of() {
   echo "$1" | sed -E 's/^[^=]+=(.+)$/\1/'
 }
 
-function parse_arguments() {
+function parse_key_value_arguments() {
   local arg1=
   local arg2=
 
@@ -56,12 +56,12 @@ function parse_arguments() {
   done
 }
 
-function parse_arguments_if_any() {
+function look_for_container_provider_in_arguments() {
   if [ $# -eq 0 ]; then
     return 0
   fi
 
-  parse_arguments "$@"
+  parse_key_value_arguments "$@"
 }
 
 function source_config_file() {
@@ -120,34 +120,14 @@ function check_container_provider_plugin() {
   fi
 }
 
-function verify_container_provider_interface() {
+function run_warp_shell() {
   :
-}
-
-function import_container_provider_functions() {
-  check_container_provider_directory \
-    && check_container_provider_plugin \
-    && . "$WARP_DIRECTORY/warp-shell/$CONTAINER_PROVIDER/provider.functions" \
-    && verify_container_provider_interface
-}
-
-function create_warp_shell_container() {
-  import_container_provider_functions
-}
-
-function execute_warp_shell_in_container() {
-  :
-}
-
-function run_warp_shell_in_container() {
-  create_warp_shell_container \
-    && execute_warp_shell_in_container "$@"
 }
 
 function run() {
-  parse_arguments_if_any "$@" \
+  look_for_container_provider_in_arguments "$@" \
     && get_default_container_provider_if_needed \
-    && run_warp_shell_in_container "$@"
+    && run_warp_shell "$@"
 }
 
 run "$@"
