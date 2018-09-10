@@ -1,3 +1,6 @@
+function container_provider_check_host_system() {
+}
+
 function container_provider_image_exists() {
   :
 }

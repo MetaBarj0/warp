@@ -1,6 +1,26 @@
 #!/bin/sh
-echo in warp-shell
-echo args are "$@"
+
+set -e
+
+function setup_directories() {
+  WARP_SHELL_DIRECTORY="$(dirname "$0")"
+  BOOTSTRAP_DIRECTORY="$WARP_SHELL_DIRECTORY/bootstrap"
+  CONTAINER_PROVIDER_DIRECTORY="$BOOTSTRAP_DIRECTORY/$CONTAINER_PROVIDER"
+}
+
+function declare_bootstrap_variables() {
+  BOOTSTRAP_COMMAND_DETECTED=1
+  BOOTSTRAP_SUBCOMMAND=
+}
+
+function warmup() {
+  setup_directories \
+    && declare_bootstrap_variables
+}
+
+warmup
+
+set +e
 
 # function import_container_provider_functions() {
 #   check_container_provider_directory \
@@ -12,3 +32,84 @@ echo args are "$@"
 # function verify_container_provider_interface() {
 #   :
 # }
+
+function is_bootstrap_command_detected_once() {
+  if [ "$1" = 'bootstrap' ] && [ "$BOOTSTRAP_COMMAND_DETECTED" -eq 1 ]; then
+    return 0
+  fi
+
+  return 1
+}
+
+function is_bootstrap_help_subcommand_detected_once() {
+  if [ "$1" = 'help' ] \
+      && [ "$BOOTSTRAP_COMMAND_DETECTED" -eq 0 ] \
+      && [ -z "$BOOTSTRAP_SUBCOMMAND" ]; then
+    return 0
+  fi
+
+  return 1
+}
+
+function is_bootstrap_run_subcommand_detected_once() {
+  if [ "$1" = 'run' ] \
+      && [ "$BOOTSTRAP_COMMAND_DETECTED" -eq 0 ] \
+      && [ -z "$BOOTSTRAP_SUBCOMMAND" ]; then
+    return 0
+  fi
+
+  return 1
+}
+
+function try_process_bootstrap_argument() {
+  if is_bootstrap_command_detected_once "$1"; then
+    BOOTSTRAP_COMMAND_DETECTED=0
+  elif is_bootstrap_help_subcommand_detected_once "$1"; then
+    BOOTSTRAP_SUBCOMMAND='help'
+  elif is_bootstrap_run_subcommand_detected_once "$1"; then
+    BOOTSTRAP_SUBCOMMAND='run'
+  else
+    return 1
+  fi
+}
+
+function is_bootstrap_command_set() {
+  [ "$BOOTSTRAP_COMMAND_DETECTED" -eq 0 ] \
+    && [ ! -z "$BOOTSTRAP_SUBCOMMAND" ]
+}
+
+function parse_input_arguments() {
+  local arg=
+  for arg in $@; do
+    try_process_bootstrap_argument "$arg" \
+      || echo "info : ignoring $arg"
+  done
+}
+
+function is_bootstrap_command_provided() {
+  parse_input_arguments "$@" \
+    && is_bootstrap_command_set
+}
+
+function do_bootstrap() {
+  :
+}
+
+function process_bootstrap_command() {
+  if ! is_bootstrap_command_provided "$@"; then
+    return 1
+  fi
+
+  do_bootstrap
+}
+
+function forward_command_to_warp_native() {
+  :
+}
+
+function main() {
+  process_bootstrap_command "$@" \
+  || forward_command_to_warp_native "$@"
+}
+
+main "$@"
