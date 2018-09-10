@@ -7,13 +7,14 @@ function set_warp_directory() {
   WARP_DIRECTORY="$(dirname "$real_warp_path")"
 }
 
-function declare_container_provider() {
+function declare_default_global_config_values() {
   CONTAINER_PROVIDER=
+  APPLIANCE_PROVIDER=
 }
 
 warmup() {
   set_warp_directory
-  declare_container_provider
+  declare_default_global_config_values
 }
 
 warmup
@@ -24,9 +25,11 @@ function is_key_equals_value_argument() {
   printf -- "$1" | grep -Eq '^[^=]+=.+$'
 }
 
-function try_setup_container_provider() {
+function try_setup_default_provider() {
   if [ "$1" = '--container-provider' ]; then
     CONTAINER_PROVIDER="$2"
+  elif [ "$1" = '--appliance-provider' ]; then
+    APPLIANCE_PROVIDER="$2"
   fi
 }
 
@@ -45,18 +48,18 @@ function parse_key_value_arguments() {
   local arg=
   for arg in $@; do
     if is_key_equals_value_argument "$arg" && [ -z "$arg1" ]; then
-      try_setup_container_provider "$(key_of "$arg")" "$(value_of "$arg")"
+      try_setup_default_provider "$(key_of "$arg")" "$(value_of "$arg")"
     else
       [ -z "$arg1" ] && arg1="$arg" && continue
       arg2="$arg"
-      try_setup_container_provider "$arg1" "$arg2"
+      try_setup_default_provider "$arg1" "$arg2"
       arg1=
       arg2=
     fi
   done
 }
 
-function look_for_container_provider_in_arguments() {
+function look_for_default_providers_in_arguments() {
   if [ $# -eq 0 ]; then
     return 0
   fi
@@ -68,26 +71,19 @@ function source_config_file() {
   if [ ! -f "$WARP_DIRECTORY/warp.config" ]; then
     printf $'%s %s\n%s %s\n%s %s\n' \
       'Unable to find configuration file needed to set the default container' \
-      'provider.' \
+      'provider and default appliance provider.' \
       'Missing file is' \
       "$WARP_DIRECTORY/warp.config" \
-      'Alternatively, you can specify --container-provider=... on warp' \
-      'invocation.'
+      'Alternatively, you can specify --container-provider=...' \
+      'and --appliance-provider=... on warp invocation.'
 
     return 1
   fi
 
   . "$WARP_DIRECTORY/warp.config" \
     && eval "$GLOBAL_CONFIG" \
-    && CONTAINER_PROVIDER="$DEFAULT_CONTAINER_PROVIDER"
-}
-
-function get_default_container_provider_if_needed() {
-  if [ ! -z "$CONTAINER_PROVIDER" ]; then
-    return 0
-  fi
-
-  source_config_file
+    && CONTAINER_PROVIDER="$DEFAULT_CONTAINER_PROVIDER" \
+    && APPLIANCE_PROVIDER="$DEFAULT_APPLIANCE_PROVIDER"
 }
 
 function check_container_provider_directory() {
@@ -125,8 +121,8 @@ function run_warp_shell() {
 }
 
 function run() {
-  look_for_container_provider_in_arguments "$@" \
-    && get_default_container_provider_if_needed \
+  source_config_file \
+    && look_for_default_providers_in_arguments "$@" \
     && run_warp_shell "$@"
 }
 
