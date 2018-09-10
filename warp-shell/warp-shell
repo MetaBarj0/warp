@@ -61,6 +61,16 @@ function is_bootstrap_run_subcommand_detected_once() {
   return 1
 }
 
+function is_bootstrap_clean_subcommand_detected_once() {
+  if [ "$1" = 'clean' ] \
+      && [ "$BOOTSTRAP_COMMAND_DETECTED" -eq 0 ] \
+      && [ -z "$BOOTSTRAP_SUBCOMMAND" ]; then
+    return 0
+  fi
+
+  return 1
+}
+
 function try_process_bootstrap_argument() {
   if is_bootstrap_command_detected_once "$1"; then
     BOOTSTRAP_COMMAND_DETECTED=0
@@ -68,6 +78,8 @@ function try_process_bootstrap_argument() {
     BOOTSTRAP_SUBCOMMAND='help'
   elif is_bootstrap_run_subcommand_detected_once "$1"; then
     BOOTSTRAP_SUBCOMMAND='run'
+  elif is_bootstrap_clean_subcommand_detected_once "$1"; then
+    BOOTSTRAP_SUBCOMMAND='clean'
   else
     return 1
   fi
@@ -99,24 +111,36 @@ function do_bootstrap_run() {
   :
 }
 
+function do_bootstrap_clean() {
+  :
+}
+
 function do_bootstrap() {
   if [ "$BOOTSTRAP_SUBCOMMAND" = 'help' ]; then
     print_bootstrap_help
   elif [ "$BOOTSTRAP_SUBCOMMAND" = 'run' ]; then
     do_bootstrap_run
+  elif [ "$BOOTSTRAP_SUBCOMMAND" = 'clean' ]; then
+    do_bootstrap_clean
   fi
 }
 
 function process_bootstrap_command() {
-  if ! is_bootstrap_command_provided "$@"; then
-    return 1
-  fi
+  is_bootstrap_command_provided "$@" \
+    && do_bootstrap
+}
 
-  do_bootstrap
+function check_system_bootstrap_status() {
+  :
+}
+
+function exec_warp_native() {
+  :
 }
 
 function forward_command_to_warp_native() {
-  :
+  check_system_bootstrap_status \
+    && exec_warp_native "$@"
 }
 
 function main() {
