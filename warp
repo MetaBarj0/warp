@@ -117,8 +117,11 @@ function check_container_provider_plugin() {
 }
 
 function run_warp_shell() {
-  CONTAINER_PROVIDER="$CONTAINER_PROVIDER" \
-    APPLIANCE_PROVIDER="$APPLIANCE_PROVIDER" :
+  (
+    CONTAINER_PROVIDER="$CONTAINER_PROVIDER" \
+      APPLIANCE_PROVIDER="$APPLIANCE_PROVIDER" \
+      exec "$WARP_DIRECTORY/warp-shell/warp-shell" "$@"
+  )
 }
 
 function run() {
