@@ -91,8 +91,20 @@ function is_bootstrap_command_provided() {
     && is_bootstrap_command_set
 }
 
-function do_bootstrap() {
+function print_bootstrap_help() {
   :
+}
+
+function do_bootstrap_run() {
+  :
+}
+
+function do_bootstrap() {
+  if [ "$BOOTSTRAP_SUBCOMMAND" = 'help' ]; then
+    print_bootstrap_help
+  elif [ "$BOOTSTRAP_SUBCOMMAND" = 'run' ]; then
+    do_bootstrap_run
+  fi
 }
 
 function process_bootstrap_command() {
