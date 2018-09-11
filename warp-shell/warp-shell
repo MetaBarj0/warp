@@ -22,17 +22,6 @@ warmup
 
 set +e
 
-# function import_container_provider_functions() {
-#   check_container_provider_directory \
-#     && check_container_provider_plugin \
-#     && . "$WARP_DIRECTORY/warp-shell/$CONTAINER_PROVIDER/provider.functions" \
-#     && verify_container_provider_interface
-# }
-
-# function verify_container_provider_interface() {
-#   :
-# }
-
 function is_bootstrap_command_detected_once() {
   if [ "$1" = 'bootstrap' ] && [ "$BOOTSTRAP_COMMAND_DETECTED" -eq 1 ]; then
     return 0
@@ -104,7 +93,7 @@ function is_bootstrap_command_provided() {
 }
 
 function print_bootstrap_help() {
-  :
+  echo bootstrap help
 }
 
 function do_bootstrap_run() {
@@ -125,8 +114,45 @@ function dispatch_bootstrap_command() {
   fi
 }
 
+function check_container_provider_functions_file_exists() {
+  local file="$CONTAINER_PROVIDER_DIRECTORY/provider.functions"
+
+  if [ ! -f "$file" ]; then
+    printf $'Error : %s %s %s\n%s %s\n' \
+      'Cannot load the' "$file" 'file as it does not exist.' \
+      'This file is mandatory and must expose functions to deal with the' \
+      'container technology you chose as container provider.'
+
+    exit 1
+  fi
+}
+
+function lookup_function() {
+  local function_name="$1"
+
+  local lookup_result_stdout="$(
+    type "$function_name" 2>/dev/null \
+    | head -n 1 \
+    | grep -Ex "$function_name"' is a function')"
+
+  if [ -z "$lookup_result_stdout" ]; then
+    printf $'Error : %s %s %s %s\n' \
+      'Cannot find the' "$function_name" 'in the file' \
+      "$CONTAINER_PROVIDER_DIRECTORY/provider.functions"
+
+    exit 1
+  fi
+}
+
+function check_container_provider_functions() {
+  lookup_function 'container_provider_check_host_system' \
+    && lookup_function 'container_provider_image_exists'
+}
+
 function load_container_provider_functions() {
-  :
+  check_container_provider_functions_file_exists \
+    && . "$CONTAINER_PROVIDER_DIRECTORY/provider.functions" \
+    && check_container_provider_functions
 }
 
 function do_bootstrap() {
