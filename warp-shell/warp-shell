@@ -115,7 +115,7 @@ function do_bootstrap_clean() {
   :
 }
 
-function do_bootstrap() {
+function dispatch_bootstrap_command() {
   if [ "$BOOTSTRAP_SUBCOMMAND" = 'help' ]; then
     print_bootstrap_help
   elif [ "$BOOTSTRAP_SUBCOMMAND" = 'run' ]; then
@@ -123,6 +123,15 @@ function do_bootstrap() {
   elif [ "$BOOTSTRAP_SUBCOMMAND" = 'clean' ]; then
     do_bootstrap_clean
   fi
+}
+
+function load_container_provider_functions() {
+  :
+}
+
+function do_bootstrap() {
+  load_container_provider_functions \
+    && dispatch_bootstrap_command
 }
 
 function try_process_bootstrap_command() {
@@ -139,7 +148,8 @@ function exec_warp_native() {
 }
 
 function forward_command_to_warp_native() {
-  check_system_bootstrap_status \
+  load_container_provider_functions \
+    && check_system_bootstrap_status \
     && exec_warp_native "$@"
 }
 
