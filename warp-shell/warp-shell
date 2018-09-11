@@ -125,7 +125,7 @@ function do_bootstrap() {
   fi
 }
 
-function process_bootstrap_command() {
+function try_process_bootstrap_command() {
   is_bootstrap_command_provided "$@" \
     && do_bootstrap
 }
@@ -144,7 +144,7 @@ function forward_command_to_warp_native() {
 }
 
 function main() {
-  process_bootstrap_command "$@" \
+  try_process_bootstrap_command "$@" \
   || forward_command_to_warp_native "$@"
 }
 
