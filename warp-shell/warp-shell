@@ -93,7 +93,51 @@ function is_bootstrap_command_provided() {
 }
 
 function print_bootstrap_help() {
-  echo bootstrap help
+  cat << EOF
+SUMMARY :
+
+\`warp bootstrap\` command is designed to prepare the host machine to benefit
+the full functionnalities set of warp.
+Bootstrapping consists in creating the necessary base on the host machine to
+use other than \`bootstrap ...\` warp command.
+
+DETAILS:
+
+There are 3 different bootstrap commands :
+- bootstrap help : display this help message
+- bootstrap run : run the bootstrap process. Once done, the host system will
+  be able to fully use the full command set of \`warp\`.
+- bootstrap clean : clean everything the \`bootstrap run\` command has done.
+  Once this command has been executed, the host machine won't be able to run
+  any \`warp\` other than bootstrap commands.
+
+Regarding the container provider specified either in the configuration file or
+in the command line with \`--container-provider=...\`, the bootstrap process
+will create few container images :
+- one able to build warp-native. warp-native is a binary executable program
+  designed to be run in a container and execute all \`warp\` commands one could
+  require.
+- few ancillary images able to support the execution of all but bootstrap
+  commands executed by warp-native.
+The content and the role of each image depends of the container provider
+specified.
+
+The \`docker\` provider is shipped with warp, by default. However, you can
+write your very own provider. All you need to do is :
+- create a sub directory under \`warp-shell/bootstrap\` having the name of the
+  provider you want to create
+- creating a provider.functions file exposing shell functions describing the
+  interface to interact with your provider. Names of these functions are
+  important. You can get inspired by the shipped \`null\` provider that does
+  nothing but exposing necessary functions.
+
+EXAMPLES :
+
+\`warp bootstrap help\` : displays bootstrap help message
+\`warp bootstrap run\` : bootstraps the host system
+\`warp bootstrap clean\` : cleans the host machine removing all modifications
+done by the \`warp bootstrap run\` command execution
+EOF
 }
 
 function do_bootstrap_run() {
