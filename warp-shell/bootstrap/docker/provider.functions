@@ -1,11 +1,35 @@
 function container_provider_check_bootstrap_status_on_host_system() {
-  return 1
+  check_host_system_for_docker_daemon \
+    && return 1
 }
 
 function container_provider_builder_image_exists() {
-  return 1
+  check_host_system_for_docker_daemon \
+    && return 1
 }
 
 function container_provider_create_builder_image() {
-  return 1
+  check_host_system_for_docker_daemon \
+    && docker_create_builder_image
+}
+
+function check_host_system_for_docker_daemon() {
+  docker info 2>/dev/null 1>&2 \
+    || ( return_code=$? \
+           && printf $'fatal : %s %s\n' \
+            'could not communicate with the docker daemon on the host' \
+            'machine. Is `docker` installed and running?' \
+           && return $return_code ) \
+    || exit $?
+}
+
+function docker_create_builder_image() {
+  ( return_code=$? \
+        && printf $'fatal : %s %s %s %s %s\n' \
+        'Could not create the builder image while bootstrapping the host' \
+        'machine. Error occured in the' \
+        'container_provider_create_builder_image function in the' \
+        "$CONTAINER_PROVIDER_DIRECTORY/provider.functions" \
+        'file' \
+        && return $return_code )
 }

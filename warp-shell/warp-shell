@@ -142,15 +142,7 @@ EOF
 
 function do_bootstrap_run() {
   if ! container_provider_builder_image_exists; then
-    container_provider_create_builder_image \
-    || ( return_code=$? \
-         && printf $'fatal : %s %s %s %s %s\n' \
-          'Could not create the builder image while bootstrapping the host' \
-          'machine. Error occured in the' \
-          'container_provider_create_builder_image function in the' \
-          "$CONTAINER_PROVIDER_DIRECTORY/provider.functions" \
-          'file' \
-         && return $return_code )
+    container_provider_create_builder_image
   else
     echo bootstrap builder image exists, nothing to do
   fi
