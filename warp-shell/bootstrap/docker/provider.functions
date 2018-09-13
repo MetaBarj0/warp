@@ -13,6 +13,11 @@ function container_provider_create_builder_image() {
     && docker_create_builder_image
 }
 
+function container_provider_create_ancillary_images() {
+  check_host_system_for_docker_daemon \
+    && return 1
+}
+
 function check_host_system_for_docker_daemon() {
   docker info 2>/dev/null 1>&2 \
     || ( return_code=$? \

@@ -9,3 +9,7 @@ function container_provider_builder_image_exists() {
 function container_provider_create_builder_image() {
   :
 }
+
+function container_provider_create_ancillary_images() {
+  :
+}

@@ -140,12 +140,17 @@ done by the \`warp bootstrap run\` command execution
 EOF
 }
 
-function do_bootstrap_run() {
+function bootstrap_create_builder_image_if_not_exists() {
   if ! container_provider_builder_image_exists; then
     container_provider_create_builder_image
   else
     echo bootstrap builder image exists, nothing to do
-  fi
+  fi 
+}
+
+function do_bootstrap_run() {
+  bootstrap_create_builder_image_if_not_exists \
+    && container_provider_create_ancillary_images
 }
 
 function do_bootstrap_clean() {
@@ -195,7 +200,8 @@ function lookup_function() {
 function check_container_provider_functions() {
   lookup_function 'container_provider_check_bootstrap_status_on_host_system' \
     && lookup_function 'container_provider_builder_image_exists' \
-    && lookup_function 'container_provider_create_builder_image'
+    && lookup_function 'container_provider_create_builder_image' \
+    && lookup_function 'container_provider_create_ancillary_images'
 }
 
 function load_container_provider_functions() {
