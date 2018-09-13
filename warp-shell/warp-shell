@@ -141,7 +141,19 @@ EOF
 }
 
 function do_bootstrap_run() {
-  :
+  if ! container_provider_builder_image_exists; then
+    container_provider_create_builder_image \
+    || ( return_code=$? \
+         && printf $'fatal : %s %s %s %s %s\n' \
+          'Could not create the builder image while bootstrapping the host' \
+          'machine. Error occured in the' \
+          'container_provider_create_builder_image function in the' \
+          "$CONTAINER_PROVIDER_DIRECTORY/provider.functions" \
+          'file' \
+         && return $return_code )
+  else
+    echo bootstrap builder image exists, nothing to do
+  fi
 }
 
 function do_bootstrap_clean() {
@@ -189,8 +201,9 @@ function lookup_function() {
 }
 
 function check_container_provider_functions() {
-  lookup_function 'container_provider_check_host_system' \
-    && lookup_function 'container_provider_image_exists'
+  lookup_function 'container_provider_check_bootstrap_status_on_host_system' \
+    && lookup_function 'container_provider_builder_image_exists' \
+    && lookup_function 'container_provider_create_builder_image'
 }
 
 function load_container_provider_functions() {

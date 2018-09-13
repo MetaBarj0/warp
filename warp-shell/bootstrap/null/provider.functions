@@ -1,7 +1,11 @@
-function container_provider_check_host_system() {
+function container_provider_check_bootstrap_status_on_host_system() {
   :
 }
 
-function container_provider_image_exists() {
+function container_provider_builder_image_exists() {
+  :
+}
+
+function container_provider_create_builder_image() {
   :
 }
