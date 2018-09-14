@@ -15,12 +15,12 @@ function container_provider_create_builder_image() {
 
 function container_provider_warp_native_image_exists() {
   check_host_system_for_docker_daemon \
-    && return 1
+    && docker_search_warp_native_image
 }
 
 function container_provider_create_warp_native_image() {
   check_host_system_for_docker_daemon \
-    && return 1
+    && docker_create_warp_native_image
 }
 
 function container_provider_ancillary_images_exist() {
@@ -49,7 +49,10 @@ function docker_search_bootstrap_builder_image() {
 function docker_create_builder_image() {
   echo 'Creating warp/bootstrap-builder image...' \
     && cd "$CONTAINER_PROVIDER_DIRECTORY" \
-    && docker build -t warp/bootstrap-builder . 1>/dev/null \
+    && docker build \
+      -t warp/bootstrap-builder \
+      -f Dockerfile.bootstrap-builder \
+      . 1>/dev/null 2>&1 \
     && cd - 1>/dev/null \
     && docker image prune -f 1>/dev/null \
     && echo 'warp/bootstrap-builder image successfully created ' \
@@ -58,6 +61,30 @@ function docker_create_builder_image() {
              'Could not create the builder image while bootstrapping the host' \
              'machine. Error occured in the' \
              'container_provider_create_builder_image function in the' \
+             "$CONTAINER_PROVIDER_DIRECTORY/provider.functions" \
+             'file' \
+           && return $return_code )
+}
+
+function docker_search_warp_native_image() {
+  docker image ls | grep -EH 'warp/warp-native' 1>/dev/null
+}
+
+function docker_create_warp_native_image() {
+  echo 'Creating warp/warp-native image...' \
+    && cd "$CONTAINER_PROVIDER_DIRECTORY" \
+    && docker build \
+      -t warp/warp-native \
+      -f Dockerfile.warp-native \
+      . 1>/dev/null 2>&1 \
+    && cd - 1>/dev/null \
+    && docker image prune -f 1>/dev/null \
+    && echo 'warp/warp-native image successfully created ' \
+    || ( return_code=$? \
+           && printf $'fatal : %s %s %s %s %s\n' \
+             'Could not create the warp native image while bootstrapping the' \
+             'host machine. Error occured in the' \
+             'container_provider_create_warp_native_image function in the' \
              "$CONTAINER_PROVIDER_DIRECTORY/provider.functions" \
              'file' \
            && return $return_code )
