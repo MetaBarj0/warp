@@ -13,12 +13,22 @@ function container_provider_create_builder_image() {
     && docker_create_builder_image
 }
 
-function container_provider_create_ancillary_images() {
+function container_provider_warp_native_image_exists() {
+  check_host_system_for_docker_daemon \
+    && return 1
+}
+
+function container_provider_create_warp_native_image() {
   check_host_system_for_docker_daemon \
     && return 1
 }
 
 function container_provider_ancillary_images_exist() {
+  check_host_system_for_docker_daemon \
+    && return 1
+}
+
+function container_provider_create_ancillary_images() {
   check_host_system_for_docker_daemon \
     && return 1
 }

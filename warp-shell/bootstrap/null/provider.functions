@@ -10,6 +10,14 @@ function container_provider_create_builder_image() {
   :
 }
 
+function container_provider_warp_native_image_exists() {
+  :
+}
+
+function container_provider_create_warp_native_image() {
+  :
+}
+
 function container_provider_create_ancillary_images() {
   :
 }

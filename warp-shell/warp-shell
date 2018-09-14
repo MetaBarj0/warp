@@ -156,8 +156,17 @@ function bootstrap_create_ancillary_images_if_not_exist() {
   fi
 }
 
+function bootstrap_create_warp_native_image_if_not_exists() {
+  if ! container_provider_warp_native_image_exists; then
+    container_provider_create_warp_native_image;
+  else
+    echo bootstrap ancillary images exist, nothing to do
+  fi
+}
+
 function do_bootstrap_run() {
   bootstrap_create_builder_image_if_not_exists \
+    && bootstrap_create_warp_native_image_if_not_exists \
     && bootstrap_create_ancillary_images_if_not_exist \
     || ( return_code=$? \
            && printf $'fatal : %s %s %s\n' \
@@ -216,7 +225,9 @@ function check_container_provider_functions() {
     && lookup_function 'container_provider_builder_image_exists' \
     && lookup_function 'container_provider_create_builder_image' \
     && lookup_function 'container_provider_create_ancillary_images' \
-    && lookup_function 'container_provider_ancillary_images_exist'
+    && lookup_function 'container_provider_ancillary_images_exist' \
+    && lookup_function 'container_provider_warp_native_image_exists' \
+    && lookup_function 'container_provider_create_warp_native_image'
 }
 
 function load_container_provider_functions() {
