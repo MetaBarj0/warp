@@ -1,6 +1,6 @@
 function container_provider_check_bootstrap_status_on_host_system() {
   check_host_system_for_docker_daemon \
-    || exit 1
+    && return 1
 }
 
 function container_provider_builder_image_exists() {
@@ -15,7 +15,12 @@ function container_provider_create_builder_image() {
 
 function container_provider_create_ancillary_images() {
   check_host_system_for_docker_daemon \
-    && exit 1
+    && return 1
+}
+
+function container_provider_ancillary_images_exist() {
+  check_host_system_for_docker_daemon \
+    && return 1
 }
 
 function check_host_system_for_docker_daemon() {

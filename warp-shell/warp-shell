@@ -148,9 +148,23 @@ function bootstrap_create_builder_image_if_not_exists() {
   fi 
 }
 
+function bootstrap_create_ancillary_images_if_not_exist() {
+  if ! container_provider_ancillary_images_exist; then
+    container_provider_create_ancillary_images
+  else
+    echo bootstrap ancillary images exist, nothing to do
+  fi
+}
+
 function do_bootstrap_run() {
   bootstrap_create_builder_image_if_not_exists \
-    && container_provider_create_ancillary_images
+    && bootstrap_create_ancillary_images_if_not_exist \
+    || ( return_code=$? \
+           && printf $'fatal : %s %s %s\n' \
+             'An error occurred while running the bootstrap process in a' \
+             'function execution in the file' \
+             "$CONTAINER_PROVIDER_DIRECTORY/provider.functions" \
+           && return $return_code )
 }
 
 function do_bootstrap_clean() {
@@ -201,7 +215,8 @@ function check_container_provider_functions() {
   lookup_function 'container_provider_check_bootstrap_status_on_host_system' \
     && lookup_function 'container_provider_builder_image_exists' \
     && lookup_function 'container_provider_create_builder_image' \
-    && lookup_function 'container_provider_create_ancillary_images'
+    && lookup_function 'container_provider_create_ancillary_images' \
+    && lookup_function 'container_provider_ancillary_images_exist'
 }
 
 function load_container_provider_functions() {
@@ -225,7 +240,7 @@ function check_system_bootstrap_status() {
 }
 
 function exec_warp_native() {
-  :
+  return 1
 }
 
 function forward_command_to_warp_native() {
