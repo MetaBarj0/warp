@@ -50,6 +50,7 @@ function docker_create_builder_image() {
   echo 'Creating warp/bootstrap-builder image...' \
     && cd "$CONTAINER_PROVIDER_DIRECTORY" \
     && docker build \
+      --rm \
       -t warp/bootstrap-builder \
       -f Dockerfile.bootstrap-builder \
       . 1>/dev/null 2>&1 \
@@ -74,6 +75,7 @@ function docker_create_warp_native_image() {
   echo 'Creating warp/warp-native image...' \
     && cd "$CONTAINER_PROVIDER_DIRECTORY" \
     && docker build \
+      --rm \
       -t warp/warp-native \
       -f Dockerfile.warp-native \
       . 1>/dev/null 2>&1 \

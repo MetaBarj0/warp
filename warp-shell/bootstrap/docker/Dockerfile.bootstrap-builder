@@ -12,4 +12,20 @@ run apk add \
       lzip \
       coreutils \
       ninja \
-      cmake
+      cmake \
+      ruby-bundler \
+      libffi-dev \
+      ruby-dev \
+      git \
+      boost \
+      boost-dev
+
+run git clone https://github.com/cucumber/cucumber-cpp.git
+
+workdir /cucumber-cpp
+
+run bundle install
+run cmake -E make_directory build
+run cmake -E chdir build cmake -G Ninja -DCUKE_ENABLE_EXAMPLES=on -DCMAKE_INSTALL_PREFIX=/usr/local ..
+run cmake --build build
+run cmake --build build --target install
