@@ -13,12 +13,13 @@ run apk add \
       coreutils \
       ninja \
       cmake \
-      ruby-bundler \
-      libffi-dev \
-      ruby-dev \
       git \
       boost \
-      boost-dev
+      boost-dev \
+      ruby-bundler \
+      ruby-dev \
+      libffi-dev \
+      vim
 
 run git clone https://github.com/cucumber/cucumber-cpp.git
 
