@@ -95,9 +95,6 @@ There are 3 different bootstrap commands :
 - bootstrap help : display this help message
 - bootstrap run : run the bootstrap process. Once done, the host system will
   be able to fully use the full command set of \`warp\`.
-- bootstrap clean : clean everything the \`bootstrap run\` command has done.
-  Once this command has been executed, the host machine won't be able to run
-  any \`warp\` other than bootstrap commands.
 
 Regarding the container provider specified either in the configuration file or
 in the command line with \`--container-provider=...\`, the bootstrap process
@@ -123,8 +120,6 @@ EXAMPLES :
 
 \`warp bootstrap help\` : displays bootstrap help message
 \`warp bootstrap run\` : bootstraps the host system
-\`warp bootstrap clean\` : cleans the host machine removing all modifications
-done by the \`warp bootstrap run\` command execution
 EOF
 }
 
