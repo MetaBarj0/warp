@@ -1,0 +1,3 @@
+[submodule "warp-native"]
+	path = warp-native
+	url = git@github.com:MetaBarj0/warp-native.git
