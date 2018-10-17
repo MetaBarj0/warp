@@ -1,27 +1,56 @@
+# Check the host system and report if the bootstrap process has been successfully run on it.
+# Returns : 0 if the host machine has been successfully bootstrapped
+#           1 if the host machine hasn't been bootstrapped
 function container_provider_check_bootstrap_status_on_host_system() {
   :
 }
 
+# Queries the host machine for the bootstrap builder image
+# Returns : 0 if the image exists on the host machine
+#           1 if the image does not exist
 function container_provider_builder_image_exists() {
   :
 }
 
+# Create or recreate the bootstrap builder image on the host machine
+# Returns : 0 if the builder image has been built successfully
+#           1 if the builder image build failed
 function container_provider_create_builder_image() {
   :
 }
 
+# Queries the host machine for the warp-native image
+# Returns : 0 if the image exists on the host machine
+#           1 if the image does not exist
 function container_provider_warp_native_image_exists() {
   :
 }
 
+# Create or recreate the warp-native image on the host machine. Though the
+# warp-native image requires the bootstrap builder image, this function does
+# not have the responsibility to ensure the bootstrap builder exists
+# beforehand.
+# Returns : 0 if the warp-native image has been built successfully
+#           1 if the warp-native image build failed
 function container_provider_create_warp_native_image() {
   :
 }
 
-function container_provider_create_ancillary_images() {
+# Queries the host machine for ancillary images existence. Ancillary images are
+# sometime necessary for warp-native to work properly. It depends the container
+# technology you are implementing in the provider.functions file. You may not
+# need any ancillary images.
+# Returns : 0 if ancillary images exist on the host machine
+#           1 if ancillary images do not exist
+function container_provider_ancillary_images_exist() {
   :
 }
 
-function container_provider_ancillary_images_exist() {
+# Create or recreate ancillary images on the host machine. Ancillary images are
+# necessity depends on the container technology you are implementing in the
+# provider.functions file. You may not need to build any ancillary image.
+# Returns : 0 if ancillary images have been built successfully
+#           1 if ancillary images build failed
+function container_provider_create_ancillary_images() {
   :
 }
