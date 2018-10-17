@@ -91,7 +91,7 @@ use other than \`bootstrap ...\` warp command.
 
 DETAILS:
 
-There are 3 different bootstrap commands :
+There are 2 different bootstrap commands :
 - bootstrap help : display this help message
 - bootstrap run : run the bootstrap process. Once done, the host system will
   be able to fully use the full command set of \`warp\`.
