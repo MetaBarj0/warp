@@ -4,7 +4,8 @@ cd /tmp
 
 wget http://ftp.gnu.org/gnu/gcc/gcc-8.2.0/gcc-8.2.0.tar.xz
 wget http://ftp.gnu.org/gnu/binutils/binutils-2.31.1.tar.xz
-wget http://ftp.gnu.org/gnu/linux-libre/4.x/4.17.10-gnu/linux-libre-4.17.10-gnu.tar.lz
+wget http://ftp.gnu.org/gnu/linux-libre/4.x/4.17.10-gnu/linux-libre-4.17.10-gnu\
+.tar.lz
 wget https://www.musl-libc.org/releases/musl-1.1.20.tar.gz
 
 TARGET=amd64-linux-musl
