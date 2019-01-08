@@ -1,4 +1,5 @@
-# Check the host system and report if the bootstrap process has been successfully run on it.
+# Check the host system and report if the bootstrap process has been 
+# successfully run on it.
 # Returns : 0 if the host machine has been successfully bootstrapped
 #           1 if the host machine hasn't been bootstrapped
 function container_provider_check_bootstrap_status_on_host_system() {
