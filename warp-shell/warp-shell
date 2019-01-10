@@ -143,7 +143,7 @@ function bootstrap_create_warp_native_image_if_not_exists() {
   if ! container_provider_warp_native_image_exists; then
     container_provider_create_warp_native_image;
   else
-    echo bootstrap ancillary images exist, nothing to do
+    echo bootstrap warp-native image exists, nothing to do
   fi
 }
 
