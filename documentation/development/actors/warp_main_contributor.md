@@ -1,9 +1,11 @@
+#Who
 The warp main contributor is the developer who initially created `carrier`
 
+#Context
 `carrier` is a system that takes place on top of `docker` and manage on-premise
 built images and appliances at a certain level.
 
-This actor is responsible to 'migrate' `carrier` to `warp`.
+This actor is responsible to migrate `carrier` to `warp`.
 
 The very main purpose of this is to drastically augment the maintainability of
 the project.
@@ -18,7 +20,7 @@ of `docker` but also on top of any other container and appliance system such as
 A by product of this maintainability enhancement is the possibility to add new
 features in `warp` that do not exist and never exist in `carrier`.
 
-To summarize :
+#Roles
 - This actor is the main contributor of `carrier`
 - requirements associated with this actor are all about maintainability of the
   project
