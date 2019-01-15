@@ -1,3 +1,0 @@
-from busybox:1.29.2-musl
-
-add warp.tar /
