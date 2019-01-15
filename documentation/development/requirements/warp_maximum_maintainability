@@ -1,0 +1,14 @@
+This requirement is tied to the `warp_main_contributor` actor.
+
+It is an open requirement that will live all along the `warp` development
+process.
+
+To guarantee a maximum maintainability for `warp`, the Acceptance Test Driven
+Development approach will be adopted.
+
+In summary :
+- Define a requirement right before any development work
+- Create one or more acceptance tests associated to that requirement
+- Define `warp` architecture according to emitted requirements
+- Ensure all `warp` features are covered by tests
+- Ensure `warp` deployability is at its maximum efficiency
