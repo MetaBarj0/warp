@@ -49,3 +49,8 @@ already exist for it.
 A requirement can evolve during its development.
 Once a development is finished meaning that all acceptance criteria for a
 requirement are met, a requirement must be marked as `done`.
+
+##Notes
+These are various notes about the `warp` project development in general.
+These notes could be valuable to catch the development process, understand
+maintainers idea an so on so forth.
