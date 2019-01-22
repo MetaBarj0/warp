@@ -28,6 +28,18 @@ As said, a requirement is written using a semi-formal format so, there is not
 any need of a strong discipline to write one.
 However, a few elements are need to make the requirement understandable and
 relevant :
+- A `status`, indicating the state of advancement of the `requirement`. Can be :
+  - `todo`, meaning the `requirement` implementation has not started
+  - `in progress`, meaning one or more contributors are working on the
+    `requirement`
+  - `done`, the implementation of the requirement is complete and all associated
+    status should only be used scarcely and for history conservation purposes.
+- An optional `dependency` section explaining how a `requirement` is part of a
+  dependency chain. A `requirement` can be `part of` another `requirement` that
+  is more general. Conversely, a `requirement` can be a `generalization` of
+  several requirements. In that case, it is possible but not mandatory that
+  acceptance criteria of a general `requirement` have to verify acceptance
+  criteria of the associated `part of` requirements.
 - A major `topic`, field of application of this requirement. It could be
   `feature`, `enhancement`, `fix`, ...
 - One or more related `actors`
@@ -40,6 +52,8 @@ relevant :
   must be met to consider the requirement fulfilled.
 - `Examples`, that can help any stakeholder to understand how that requirement
   can be observed in its implementation within the project.
+- `References` to point on external document directly related to this
+  `requirement.`
 Besides these elements, a requirement author is free to add as many paragraphs
 he wants. Keep in mind however that a requirement must be clear and readable.
 

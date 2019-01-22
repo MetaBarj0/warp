@@ -1,5 +1,9 @@
+#Status
+In progress
+
 #Topic
-Related to `warp` maintainability
+Consists in getting `warp` and `warp-shell` scripts testable in a way to ensure
+a maximum maintainability even at shell script level.
 
 #Related actors
 Contributors primarily, users at a lesser extent, to build confidence
@@ -27,6 +31,13 @@ environment, a container in a linux subsystem.
 #Demand
 Cover the 'warp' and 'warp-shell' with tests, ensuring maximum maintainability
 even for shell script parts of `warp`
+
+#Dependencies
+- `part of` the `warp_maximum_maintainability`
+
+#References
+- A note explaining how to get testable shell scripts :
+  `../notes/testing_shell_scripts.md`
 
 #Acceptance Criteria
 - A suite of tests exists and is fully executable to test 'warp' and
