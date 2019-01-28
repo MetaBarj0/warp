@@ -1,16 +1,16 @@
-#Observation
+# Observation
 The shell scripting language is not strictly tied to a precise programming
 paradigm and thus, cannot produce programs that are easily testable if the
 programmer does not concieve its scripts with a certain discipline.
 
-#Using shell strengths
+# Using shell strengths
 However, `sh` can use `functions` and, even import them from external script
 files.
 
 Therefore, it is possible to use some sort of `dependency injection` techniques
 leading to somewhat testable code.
 
-#Discipline to make tests possible
+# Discipline to make tests possible
 However, it does not suffice and in order to make a testable script, here are my
 ideas about a `shell` program architecture :
 
@@ -37,7 +37,7 @@ ideas about a `shell` program architecture :
 - The `Interface Segregation Principle` is not a matter, no polymorphism
   involved in shell programming
 
-#Shell program architecture
+# Shell program architecture
 Therefore, it is possible to design shell programs to be testable, here is how :
 ```
 +-----------+   +-----------+   +-----------+   +-----------+   +-----------+
@@ -81,12 +81,12 @@ Notice that from a box perspective, all arrows point toward the same directions.
 
 That is it! With that architecture, I can design fully testable shell program.
 
-#Example
+# Example
 Below is a really silly example of what is a testable shell script. It is a
 stupid program intentionnaly designed to be slow that succeeds if a random
 number selected at runtime is even and fails if the number is odd.
 
-##Tests
+## Tests
 Following the Test Driven Development discipline, let's begin by writing a
 test. As seen above, the test is an entrypoint. It uses directly the `frame`
 and component script file path to inject and that will be used withing the
@@ -123,7 +123,7 @@ frame_run \
 This second test implementation is really obvious and quite similar to the
 first test written just before.
 
-##The frame
+## The frame
 Let's write the logic of the program called the `frame`. This `frame` *must* be
 usable in both a testing context and in the production context. Here is the
 content of the `frame.sh` script :
@@ -156,7 +156,7 @@ function calls returning the result of the execution of the last executed
 function.
 The return value of `frame_run` dictates if the program fails or succeeds.
 
-##Components used in testing context
+## Components used in testing context
 There are :
 1. `get_even_random_number_mock.sh` that is a test double specifically designed
    to be used in a testing environment when speed is a mandatory prerequiste
@@ -181,7 +181,7 @@ function validate_random_number() {
   [ $(( $1 % 2 )) -eq 0 ]
 }
 ```
-##Test programs
+## Test programs
 Below are tests that are executed. They are `entrypoints` injecting a test
 double as well as a production component suitable to be used in a test context.
 Here is `test_even_random_number.sh`
@@ -213,7 +213,7 @@ The second test ensure that the call of the `frame_run` function fails when
 fed with a test double of an odd random number generator component and a
 random number validator component.
 
-##The main program
+## The main program
 This is the production `entrypoint`. Its way of working is absolutely similar to
 one of the test program above, but instead of injecting a test double as random
 number generator, it injects the real production `component` that is designed
@@ -230,7 +230,7 @@ You can see here that the first injected `component `is the production one.
 Moreover, no check is made to see if the execution of the `fram_run` function
 was successfull or not as it does not matter for the production program.
 
-#Summary of the architecture
+# Summary of the architecture
 There are 3 kind of entity :
 1. `entrypoints` that are responsible to directly use a `frame` and to inject
    `components` using their script paths. An `entrypoint` can be either the
