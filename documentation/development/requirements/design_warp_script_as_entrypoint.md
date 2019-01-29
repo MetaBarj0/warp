@@ -114,29 +114,34 @@ when using `warp`
 
 # Acceptance Criteria
 
-## Configuration argument criteria
+## Configuration file content criteria
+- The `warp` configuration file must be easily understandable and well
+  documented
+- The `warp` configuration file must contain a variable specifying which
+  container technology to use. At this stage, only `docker` is supported
+- `warp` entrypoint script source the container technology to use variable
+  present in the configuration file
+- `warp` entrypoint script must fail if it cannot initialized the container
+  technology to use variable from the configuration file.
+
+## Configuration file criteria
 - `warp` entrypoint script accepts a configuration file path argument as first
   argument
 - By default, the `warp` entrypoint script loads the configuration file in the
-  same directory as it.
+  same directory as it with a default name of `warp-config.sh`
 - `warp` entrypoint script runs with error if it cannot find or load the
   configuration file.
 - `warp` entrypoint script ignore configuration argument if specified after
   another argument.
-- The `warp` configuration file must contain a variable specifying which
-  container technology to use. At this stage, only `docker` is supported
-- The `warp` configuration file must be easily understandable and well
-  documented
-- `warp` entrypoint script source the container technology to use variable
-  present in the configuration file
 
 ## Help on usage criteria
-- `warp` entrypoint script accepts a `help` argument to display help on usage.
 - `warp` entrypoint script called without any argument trigger the help on
   usage
-- The help on usage documentation must indicate the host machine is or is not
-  bootstrapped yet.
+- `warp` entrypoint script accepts a `help` argument to display help on usage.
 - The help on usage must indicate about the loaded configuration file path
+- The help on usage documentation must indicate the host machine is or is not
+  bootstrapped yet for a chosen container technology specified in the
+  configuration file.
 - The help on usage must indicate about the container technology used.
 
 ## Bootstrap argument criteria
